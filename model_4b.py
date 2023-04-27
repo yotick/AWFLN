@@ -8,11 +8,11 @@ from math import sqrt
 from models_others import SoftAttn
 
 
-class Generator(nn.Module):
+class AWFLN(nn.Module):
     def __init__(self, scale_factor):
         upsample_block_num = int(math.log(scale_factor, 2))
 
-        super(Generator, self).__init__()
+        super(AWFLN, self).__init__()
         self.blk_5_30_3 = nn.Sequential(
             # nn.Conv2d(2, 64, kernel_size=9, padding=4),
             nn.Conv2d(5, 30, kernel_size=3, padding=1),
@@ -37,8 +37,8 @@ class Generator(nn.Module):
         self.conv6 = nn.Conv2d(in_channels=30, out_channels=4, kernel_size=3, stride=1, padding=1,
                                bias=True)  # change out as 4   or   8
 
-        self.lu_block1 = Exp_block(60)
-        self.lu_block2 = Exp_block(30)
+        self.lu_block1 = RMRS(60)
+        self.lu_block2 = RMRS(30)
 
     #######################
     def forward(self, ms_up, ms_org, pan):
@@ -187,9 +187,9 @@ def init_weights(*modules):
                 if m.bias is not None:
                     nn.init.constant_(m.bias, 0.0)
 
-class Exp_block(nn.Module):
+class RMRS(nn.Module):
     def __init__(self, out_channels):
-        super(Exp_block, self).__init__()
+        super(RMRS, self).__init__()
 
         self.conv2_1 = nn.Conv2d(in_channels=out_channels, out_channels=out_channels // 3, kernel_size=3, stride=1,
                                  padding=1, bias=True)
@@ -199,8 +199,8 @@ class Exp_block(nn.Module):
                                  padding=3, dilation=3, bias=True)
 
 
-        self.conv3_1 = LAC_lu(out_channels, out_channels, 3, 1, 1, use_bias=True)
-        self.conv3_2 = LAC_lu(out_channels, out_channels, 3, 1, 1, use_bias=True)
+        self.conv3_1 = AFLB(out_channels, out_channels, 3, 1, 1, use_bias=True)
+        self.conv3_2 = AFLB(out_channels, out_channels, 3, 1, 1, use_bias=True)
 
         self.relu = nn.ReLU(inplace=True)
         init_weights(self.conv2_1, self.conv2_2, self.conv2_3)
@@ -224,9 +224,9 @@ class Exp_block(nn.Module):
         out2 = self.relu(torch.add(out2, out1))
         return out2
 
-class LAC_lu(nn.Module):
+class AFLB(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, use_bias=False):
-        super(LAC_lu, self).__init__()
+        super(AFLB, self).__init__()
         self.in_features = in_planes
         self.out_features = out_planes
         self.kernel_size = kernel_size

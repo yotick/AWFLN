@@ -15,7 +15,7 @@ from tensorboardX import SummaryWriter
 
 from data_set_py.data_utils_RS import TrainDatasetFromFolder, ValDatasetFromFolder
 from loss import GeneratorLoss
-from model_4b import Generator
+from model_4b import AWFLN
 # from model_8b import Generator
 from img_index import ref_evaluate
 import pandas as pd
@@ -60,7 +60,7 @@ torch.cuda.manual_seed_all(SEED)
 cudnn.deterministic = True
 
 device = torch.device('cuda:0')
-model = Generator(UPSCALE_FACTOR).to(device)
+model = AWFLN(UPSCALE_FACTOR).to(device)
 
 generator_criterion = GeneratorLoss(batchSize=BATCH_SIZE).to(device)
 

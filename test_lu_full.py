@@ -7,7 +7,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from data_set_py.data_utils_Full import TestDatasetFromFolder_Full
 # from data import get_test_set
-from model_8b import Generator  ################ need to change ######################
+from model_8b import AWFLN  ################ need to change ######################
 # from model_4 import Generator  ################ need to change ######################
 # sys.path.append('E:\\remote sense image fusion\\shared_py')
 from data_set_py.save_image_func import save_image_full
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     parser.add_argument('--cuda', default=False, help='use cuda?')
     opt = parser.parse_args()
 
-    model = Generator(1).cuda().eval()   ########## need to change
+    model = AWFLN(1).cuda().eval()   ########## need to change
 
     opt.satellite = 'ik'
     # opt.satellite = 'wv3_8'
