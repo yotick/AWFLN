@@ -1,6 +1,6 @@
 # AWFLN: An Adaptive Weighted Feature Learning Network for Pansharpening-TGRS2023
 
-For training please run train.py, and for testing please run the file test_RS.py for reduced scale images and test_lu_full.py for full scale image. The file test_lu_full_crop.py is used when the images are too big. 
+For training, please run the train.py file. For testing, use the test_RS.py file for reduced-scale images and the test_lu_full.py file for full-scale images. If the images are too large, you can use the test_lu_full_crop.py file instead.
 
 We would be pleased if you can cite this paper, and please refer to:
 
